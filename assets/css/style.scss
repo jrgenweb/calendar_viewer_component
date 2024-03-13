@@ -98,6 +98,10 @@ body {
                 &.next-month {
                     color: $gray;
                 }
+
+                &.highlight {
+                    background-color: lighten(green, 20%);
+                }
             }
         }
     }
@@ -141,14 +145,19 @@ body {
     }
 }
 .btn-edit {
-    background-color: darken(lightgreen, 30%);
-    color: $white;
+    color: $black;
+    background-color: transparent;
+    padding: 1rem;
+    font-size: 1.6rem;
     &:hover {
         background-color: darken(lightgreen, 15%);
     }
 }
 .btn-delete {
-    @extend .btn-danger;
+    padding: 1rem;
+    font-size: 1.6rem;
+    background-color: transparent;
+    color: red;
     &:hover {
         // background-color: darken(lightgreen, 15%);
     }
@@ -207,9 +216,20 @@ body {
         font-size: 2rem;
         .events {
             padding: 5rem 0;
+
             .event {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                border-radius: 10px;
+                .event-actions {
+                    display: flex;
+                    gap: 1rem;
+                }
+                &:nth-child(odd) {
+                    background-color: lighten($gray, 10%);
+                }
             }
         }
 

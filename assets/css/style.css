@@ -83,6 +83,9 @@ body {
 .calendar .calendar-body .calendar-days .days.previous-month, .calendar .calendar-body .calendar-days .days.next-month {
   color: lightgray;
 }
+.calendar .calendar-body .calendar-days .days.highlight {
+  background-color: #00e600;
+}
 
 .selected-date {
   color: #171d35;
@@ -114,22 +117,30 @@ body {
   background-color: #9a7dff;
 }
 
-.btn-danger, .btn-delete {
+.btn-danger {
   background-color: #ff3a47;
   color: #fff;
 }
-.btn-danger:hover, .btn-delete:hover {
+.btn-danger:hover {
   background-color: #ff878f;
 }
 
 .btn-edit {
-  background-color: #1ec71e;
-  color: #fff;
+  color: #171d35;
+  background-color: transparent;
+  padding: 1rem;
+  font-size: 1.6rem;
 }
 .btn-edit:hover {
   background-color: #4ee44e;
 }
 
+.btn-delete {
+  padding: 1rem;
+  font-size: 1.6rem;
+  background-color: transparent;
+  color: red;
+}
 .btn-close {
   font-weight: bold;
   text-decoration: none;
@@ -182,6 +193,16 @@ body {
 .modal .modal-body .events .event {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 10px;
+}
+.modal .modal-body .events .event .event-actions {
+  display: flex;
+  gap: 1rem;
+}
+.modal .modal-body .events .event:nth-child(odd) {
+  background-color: #ededed;
 }
 .modal .modal-body .form-control {
   display: flex;
