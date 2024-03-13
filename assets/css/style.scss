@@ -1,0 +1,328 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
+
+$bg-color: #f4f3ff;
+$purple: #734aff;
+$red: #ffd2eb;
+$orange: #ffd3d6;
+$black: #171d35;
+$white: #fff;
+$gray: lightgray;
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    font-size: 10px;
+    font-family: monospace;
+}
+body {
+    background-color: #f4f3ff;
+}
+
+.container {
+    display: grid;
+    place-content: center;
+    position: relative;
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.calendar {
+    background-color: $white;
+    width: 500px;
+
+    border-radius: 1rem;
+    box-shadow: 0px 5px 15px rgba(128, 128, 128, 0.337);
+    padding: 3rem;
+    z-index: 100;
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 2rem 0 4rem 0;
+        .selector {
+            a {
+                font-size: 2rem;
+                color: $black;
+                text-decoration: none;
+                i {
+                    transition: 300ms ease-in-out;
+                }
+                &:hover {
+                    i {
+                        scale: 1.5;
+                    }
+
+                    //text-decoration: underline;
+                }
+            }
+        }
+    }
+    .calendar-body {
+        .calendar-day-names {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+
+            align-items: center;
+            justify-items: center;
+            font-size: 2rem;
+            div {
+                overflow: hidden;
+                max-width: 3ch;
+            }
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            padding: 1rem;
+
+            .days {
+                padding: 1rem;
+                font-size: 2rem;
+                display: grid;
+                align-content: center;
+                justify-content: center;
+                border-radius: 50%;
+                aspect-ratio: 1;
+                cursor: pointer;
+                transition: 300ms;
+                &:hover {
+                    background-color: lighten($purple, 20%);
+                }
+                &.previous-month,
+                &.next-month {
+                    color: $gray;
+                }
+            }
+        }
+    }
+}
+
+.selected-date {
+    color: $black;
+    font-weight: bold;
+    font-size: 3rem;
+}
+
+.current {
+    background-color: $purple;
+    color: $white;
+}
+
+.btn {
+    border: 0;
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    text-transform: uppercase;
+
+    font-weight: 400;
+    transition: 300ms;
+}
+
+.btn-primary {
+    background-color: $purple;
+    color: $white;
+    &:hover {
+        background-color: lighten($purple, 10%);
+    }
+}
+.btn-danger {
+    background-color: darken($orange, 30%);
+    color: $white;
+    &:hover {
+        background-color: darken($orange, 15%);
+    }
+}
+.btn-edit {
+    background-color: darken(lightgreen, 30%);
+    color: $white;
+    &:hover {
+        background-color: darken(lightgreen, 15%);
+    }
+}
+.btn-delete {
+    @extend .btn-danger;
+    &:hover {
+        // background-color: darken(lightgreen, 15%);
+    }
+}
+.btn-close {
+    font-weight: bold;
+    text-decoration: none;
+    color: $black;
+    font-size: 2rem;
+    border-radius: 50%;
+    padding: 0.5rem 1rem;
+    aspect-ratio: 1;
+    &:hover {
+        background-color: $purple;
+        color: $white;
+    }
+}
+
+.modal {
+    background-color: $white;
+    position: absolute;
+
+    z-index: 200;
+    width: 50vw;
+
+    bottom: -100vh;
+    //scale: 0;
+    opacity: 0;
+    box-shadow: 0px 5px 10px $gray;
+    border-radius: 20px;
+    padding: 2rem;
+    transition:
+        scale 300ms,
+        opacity 500ms,
+        translate 400ms;
+
+    .modal-header {
+        padding: 0rem 1rem 1rem 1rem;
+        border-bottom: 1px solid $gray;
+        font-size: 1.6rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-footer {
+        padding: 1rem;
+        border-top: 1px solid $gray;
+        font-size: 1.6rem;
+        display: flex;
+        justify-content: center;
+        column-gap: 3rem;
+    }
+
+    .modal-body {
+        font-size: 2rem;
+        .events {
+            padding: 5rem 0;
+            .event {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        .form-control {
+            display: flex;
+            justify-content: space-between;
+            padding: 3rem 0;
+
+            input {
+                padding: 0.5rem;
+                border: 0;
+                border-bottom: 4px solid $purple;
+                color: $black;
+                width: 70%;
+                &:focus {
+                    outline: none;
+                    border-color: lighten($purple, 20%);
+                }
+            }
+        }
+    }
+
+    &:after {
+        //content: "";
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+
+        transform: translate(-25%, -35%);
+        background-color: red;
+        z-index: -150;
+    }
+}
+
+.modal.active {
+    left: 50%;
+    top: 50%;
+    bottom: unset;
+    scale: 1;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+}
+/**
+    Decorations
+
+**/
+
+.triangle {
+    width: 100%;
+    width: 190px;
+    height: 100px;
+
+    position: absolute;
+
+    z-index: 10;
+
+    //border-radius: 0% 100% 0% 0%;
+    border: 130px solid transparent;
+    border-left: 230px solid lighten($purple, 30%);
+
+    transform: translate(50%, 50%);
+    rotate: -45deg;
+}
+
+.triangle-1 {
+    bottom: 100px;
+    left: 0;
+}
+.triangle-2 {
+    top: 200px;
+    right: 100px;
+    rotate: -100deg;
+}
+.triangle-3 {
+    border-left-color: $orange;
+    bottom: 20px;
+    right: 200px;
+    rotate: 0deg;
+    filter: blur(5px);
+}
+.triangle-4 {
+    top: -250px;
+    right: 20%;
+    rotate: 0deg;
+    filter: blur(5px);
+}
+.triangle-5 {
+    top: 5%;
+    left: 5%;
+    rotate: 0deg;
+
+    width: 40px;
+    height: 40px;
+    border: 40px solid transparent;
+    border-left: 80px solid $orange;
+    rotate: 40deg;
+}
+
+.circle {
+    width: 100px;
+    aspect-ratio: 1;
+    position: absolute;
+    border-radius: 50%;
+}
+.circle-1 {
+    left: 35%;
+    bottom: 10%;
+    background-color: $red;
+}
+
+.circle-2 {
+    width: 70px;
+    right: 35%;
+    top: 10%;
+    background-color: $orange;
+}
