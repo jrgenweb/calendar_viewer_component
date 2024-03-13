@@ -20,16 +20,15 @@ const btnCancel = document.querySelector('#btnCancel');
 const eventInput = document.querySelector('#eventInput');
 const eventId = document.querySelector('#eventId');
 const modalEvents = document.querySelector('.events');
-
+const modalDrop = document.querySelector('.modal-drop');
 
 const weekDays = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap']
 const monthNames = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December']
 
 
 let date = new Date();
-
-const currentYear = date.getFullYear()
-const curretMonth = date.getMonth();
+const currentYear = date.getFullYear();
+const currentMonth = date.getMonth();
 const currentDay = date.getDate();
 
 let selectedYear = date.getFullYear();
@@ -37,7 +36,7 @@ let selectedMonth = date.getMonth();
 let selectedDay = date.getDate();
 
 let calendarNumbers = [];
-
+let events = JSON.parse(localStorage.getItem('events'));
 //events start
 
 calendarLeftSelector.addEventListener('click', previousMonth);
@@ -45,130 +44,108 @@ calendarRightSelector.addEventListener('click', nextMonth);
 //events end
 
 
+
+// a napok kiíratása....
+weekDays.forEach((item) => {
+    calendarDayNames.innerHTML += `<div>${item}</div>`
+
+})
+function renderCalendar() {
+    calendarDayItems.innerHTML = ''; //lenullazzuk a calendar-t
+
+    calendarSelectedDate.innerHTML = `${selectedYear} ${monthNames[selectedMonth]}`
+
+    let actualMonthDays = new Date(selectedYear, selectedMonth + 1, 0).getDate(),
+        indexOfCurrentDay = new Date(selectedYear, selectedMonth, 1).getDay(), //a hónap elsőnapjának az indexe
+        previousMonthDays = new Date(selectedYear, selectedMonth, 0).getDate();
+    lastDayOfMonth = new Date(selectedYear, selectedMonth, actualMonthDays).getDay();
+
+
+
+    //console.log(actualMonthDays + ' sd ' + selectedDay + 'előző honap napjai: ' + lastDayOfMonth)
+
+
+    //24 29
+    for (i = previousMonthDays - indexOfCurrentDay + 1; i < previousMonthDays; i++) {
+        calendarDayItems.innerHTML += `<div class="days previous-month">${i + 1}</div>`
+    }
+
+
+    /**
+     * 
+     * 
+     * az aktuális napok kiírratása
+     * 
+     * 
+     */
+    for (i = 0; i < actualMonthDays; i++) {
+        let current, highlight = '';
+
+        //console.log(currentDay, selectedDay, selectedMonth, currentMonth,)
+        if (selectedMonth === currentMonth && selectedYear === currentYear && i + 1 === currentDay) {
+            current = 'current';
+        }
+
+
+
+        events.forEach(eventItem => {
+            console.log(eventItem, selectedMonth, selectedYear, i + 1)
+            if (
+                eventItem.date.year === selectedYear
+                && eventItem.date.month === selectedMonth
+                && Number.parseInt(eventItem.date.day) === i + 1) {
+                highlight = 'highlight';
+
+                console.log('Va')
+            }
+            console.log('nincs')
+        })
+
+
+
+
+
+
+        calendarDayItems.innerHTML += `<div class="days actual-month ${current} ${highlight}">${i + 1}</div>`
+    }
+
+    //itt lesznek a hónap következőnapjai
+
+
+    /* console.log(lastDayOfMonth)
+     6 - lastDateOfLastMonth;*/
+
+    for (i = 0; i <= 6 - lastDayOfMonth; i++) {
+        calendarDayItems.innerHTML += `<div class="days next-month">${i + 1}</div>`
+        console.log('ok: ' + i)
+    }
+
+
+    //eseménykezelő hozzáadása a napokhoz
+    addClickEvents();
+
+}
+
+renderCalendar();
+
+
+
+
+
+
+
+
 //modal window events
 
 modalCloseBtn.addEventListener('click', () => {
-    modal.classList.remove('active')
+    closeModal()
 })
 btnCancel.addEventListener('click', () => {
-    modal.classList.remove('active')
+    closeModal()
 })
 
 btnAdd.addEventListener('click', addEvent)
 
-
-console.log('date: ' + date +
-    '\nyear:' + date.getFullYear() +
-    '\nmonth: ' + date.getMonth() +
-    '\nday: ' + date.getDate())
-
-
-
-
-function getCalendarNumbers(year, month, day) {
-
-    let { currentMonthLength, previousMonthLength, previusMonthIndex
-    } =
-        getMonthDaysCount(year, month, day)
-
-
-    console.log(currentMonthLength)
-    console.log(previusMonthIndex)
-
-
-
-    for (i = 0; i < currentMonthLength; i++) {
-        calendarNumbers.push({
-            'day': i + 1,
-            'class': 'actual-month'
-        });
-    }
-    for (i = 0; i < previusMonthIndex; i++) {
-        calendarNumbers.unshift({
-            'day': previousMonthLength - i,
-
-            'class': 'previous-month'
-        });
-    }
-
-
-
-    const length = calendarNumbers.length;
-    for (i = 0; i < (42 - length); i++) {
-        calendarNumbers.push({
-            'day': i + 1,
-            'class': 'next-month'
-        });
-    }
-
-}
-
-function getMonthDaysCount(year, month, day) {
-
-    //visszatér az előző hónap hosszával
-    //visszatér a kiválasztott hónap hosszával
-    //visszatér a kiválasztott hónap napjával, hogy hanyadik a héten
-
-
-
-    //current month length
-    const currentMonthLength = (new Date(year, month, 0)).getDate();
-    const previusMonthIndex = (new Date(year, month, 0)).getDay();
-
-    prevYear = year;
-    prevMonth = month - 1;
-    prevMonth -= 1;
-    if (prevMonth < 0) {
-        prevMonth = 11;
-        prevYear -= 1
-    }
-    const previousMonthLength = (new Date(prevYear, prevMonth, 0)).getDate();
-
-
-    console.log('currents:' + currentMonthLength, 'previous:' + previousMonthLength, previusMonthIndex)
-    console.log(currentMonthLength)
-
-
-
-    return { currentMonthLength, previousMonthLength, previusMonthIndex }
-}
-
-
-function renderCalendarElements() {
-    calendarNumbers = [];
-    console.log('emptyed array:' + calendarNumbers)
-    getCalendarNumbers(selectedYear, selectedMonth, selectedDay);
-
-    calendarSelectedDate.innerText = selectedYear + ' ' + monthNames[selectedMonth];
-
-
-    calendarDayNames.innerHTML = '';
-    calendarDayItems.innerHTML = '';
-
-    weekDays.forEach(dayName => {
-        const dayNameElement = document.createElement('div');
-        dayNameElement.innerText = dayName;
-        calendarDayNames.appendChild(dayNameElement);
-    })
-
-
-    calendarNumbers.forEach((item) => {
-        const calendarElement = document.createElement('div');
-        calendarElement.classList.add('days');
-        calendarElement.classList.add(item.class);
-        if (item.day === currentDay && selectedYear === currentYear && selectedMonth === curretMonth) {
-            calendarElement.classList.add('current');
-        }
-
-
-        calendarElement.innerText = item.day;
-        calendarDayItems.appendChild(calendarElement)
-    });
-
-    addClickEvents();
-
-    highlightEvents();
-}
 
 function previousMonth() {
 
@@ -177,7 +154,7 @@ function previousMonth() {
         selectedMonth = 11;
         selectedYear -= 1
     }
-    renderCalendarElements()
+    renderCalendar()
 }
 function nextMonth() {
 
@@ -186,10 +163,10 @@ function nextMonth() {
         selectedMonth = 0;
         selectedYear += 1
     }
-    renderCalendarElements()
+    renderCalendar();
 }
 
-renderCalendarElements();
+//renderCalendarElements();
 
 
 
@@ -200,16 +177,26 @@ function addClickEvents() {
     const days = document.querySelectorAll('.days');
 
     days.forEach(day => {
-        day.addEventListener('click', function (event) {
-            selectedDay = event.target.innerText
-            loadEvents(selectedYear, selectedMonth, selectedDay);
+        if (day.classList.contains('actual-month')) {
+            day.addEventListener('click', function (event) {
+                selectedDay = event.target.innerText
+                loadEvents(selectedYear, selectedMonth, selectedDay);
 
-            console.log('a választott napom' + selectedDay)
-            modal.classList.add('active')
-        });
+                console.log('a választott napom' + selectedDay)
+
+                openModal();
+
+
+
+            });
+        } else if (day.classList.contains('previous-month')) {
+            day.addEventListener('click', previousMonth);
+        } else {
+            day.addEventListener('click', nextMonth);
+        }
     })
 
-    highlightEvents();
+
 }
 
 
@@ -227,8 +214,6 @@ function addClickEvents() {
 
 //load events from localstorage
 function loadEvents() {
-    events = JSON.parse(localStorage.getItem('events'));
-
     modalEvents.innerHTML = '';
     console.log(events)
 
@@ -276,31 +261,12 @@ function loadEvents() {
 
 }
 
-function highlightEvents() {
 
-    events = JSON.parse(localStorage.getItem('events'));
-    const days = document.querySelectorAll('.days');
-    days.forEach(item => {
-        events.forEach(eventItem => {
-            if (eventItem.date.year === selectedYear && eventItem.date.month === selectedMonth && eventItem.date.day === item.innerText && item.classList.contains('actual-month')) {
-                item.classList.add('highlight');
-            }
-        })
-
-    })
-    console.log('itt történik a high')
-
-}
 
 
 //add events 
 
-function addEvent(text) {
-
-    let events = JSON.parse(localStorage.getItem('events'));
-
-    console.log(events)
-
+function addEvent() {
     if (events === null) {
         events = new Array();
     }
@@ -309,26 +275,18 @@ function addEvent(text) {
         date: {
             year: selectedYear,
             month: selectedMonth,
-            day: selectedDay
+            day: Number.parseInt(selectedDay)
+
+
         }
     })
 
-    //let lclEvents = localStorage.getItem('events');
-
-
     localStorage.setItem('events', JSON.stringify(events));
-    //localStorage.setItem('events', events)
 
-
-
-    modal.classList.remove('active')
     eventInput.value = '';//törlöm az event imputot
-    console.log(events);
-
-
-
+    closeModal();
     //refreshelnunk kell az egész kalendáriumot
-    renderCalendarElements();
+    renderCalendar();
 }
 
 
@@ -339,19 +297,29 @@ function deleteEvent(event) {
     if (confirm('Biztos tölölni szeretnéd?')) {
         let torolt = events.splice(eventIndex, 1);
         localStorage.setItem('events', JSON.stringify(events))
-        //alert('ok' + eventIndex + 'törölt: ' + torolt)
-
-        loadEvents();
-        renderCalendarElements();
-
+        renderCalendar();
     }
 }
 
 //open modal
 // csak azokat az eseményeket töltöm be amelyek az adott dátumra vonatkoznak
+
+
+
+
+
 function openModal() {
-
-
-
+    modal.classList.add('active')
+    modalDrop.classList.add('active')
 
 }
+
+function closeModal() {
+
+    modal.classList.remove('active')
+    modalDrop.classList.remove('active')
+}
+
+
+
+

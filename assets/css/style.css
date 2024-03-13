@@ -20,14 +20,12 @@ body {
   display: grid;
   place-content: center;
   position: relative;
-  min-width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   overflow: hidden;
 }
 
 .calendar {
   background-color: #fff;
-  width: 500px;
   border-radius: 1rem;
   box-shadow: 0px 5px 15px rgba(128, 128, 128, 0.337);
   padding: 3rem;
@@ -158,7 +156,7 @@ body {
 .modal {
   background-color: #fff;
   position: absolute;
-  z-index: 200;
+  z-index: 1000;
   width: 50vw;
   bottom: -100vh;
   opacity: 0;
@@ -220,14 +218,6 @@ body {
   outline: none;
   border-color: #c2b0ff;
 }
-.modal:after {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  transform: translate(-25%, -35%);
-  background-color: red;
-  z-index: -150;
-}
 
 .modal.active {
   left: 50%;
@@ -238,6 +228,41 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.modal-drop {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(50%, 50%);
+  z-index: 100;
+}
+.modal-drop.active {
+  width: 100vw;
+  height: 100vh;
+  scale: 1;
+  top: 0;
+  left: 0;
+  transform: none;
+  animation: modalFade 0.5s linear forwards;
+  background-color: rgba(0, 0, 0, 0.579);
+}
+
+@keyframes modalFade {
+  0% {
+    width: 100vw;
+    height: 100vh;
+    scale: 0;
+  }
+  50% {
+    background-color: rgba(0, 0, 0, 0.079);
+    scale: 1;
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.179);
+  }
+}
 /**
     Decorations
 
@@ -309,4 +334,13 @@ body {
   right: 35%;
   top: 10%;
   background-color: #ffd3d6;
+}
+
+@media screen and (max-width: 500px) {
+  html {
+    font-size: 7px;
+  }
+  .modal {
+    width: 90vw;
+  }
 }/*# sourceMappingURL=style.css.map */
